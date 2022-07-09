@@ -10,7 +10,7 @@ tetrvm is a stack-based virtual machine capable of running tetris playfields. ye
 
 the maximum int size you can put in is 2^24.
 
-the opcodes are in vm/jit.v.
+the opcodes are in tet.md.
 
 0 = empty
 1 = I piece (light blue)

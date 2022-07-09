@@ -13,7 +13,7 @@ const (
 	pow_0 = 1
 )
 
-const opcodes = [u8(push), pop, peek, dup, swap, add, sub, put, puts, mul, div, neg]
+const opcodes = [u8(push), pop, peek, dup, swap, add, sub, put, puts, mul, div, neg, jump, stop]
 
 // values are in octal because it's easier
 const (
@@ -22,13 +22,15 @@ const (
 	peek = 0o02
 	dup  = 0o03
 	swap = 0o04
-	add  = 0o05
-	sub  = 0o06
+	jump = 0o05
+	stop = 0o06
 	put  = 0o07
 	puts = 0o10
 	mul  = 0o11
 	div  = 0o12
 	neg  = 0o13
+	add  = 0o14
+	sub  = 0o15	
 )
 
 pub fn (mut t Tetrvm) run(filename string) {
@@ -51,8 +53,6 @@ pub fn (mut t Tetrvm) run(filename string) {
 		}
 	}
 
-	unsafe { free(file) }
-
 	for idx, i in instructions.reverse() {
 		if i.len != 10 {
 			eprintln('your program is incomplete!')
@@ -67,10 +67,13 @@ pub fn (mut t Tetrvm) run(filename string) {
 
 [inline; direct_array_access]
 fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
-	for i in instructions {
+	for !t.stopped || t.inst < instructions.len {
+		i := instructions[t.inst]
 		opcode := (i[0] * 8) + i[1]
 		value := u8_arr_to_int(i[2..10])
 		
+		t.inst++ // incrementing after jumping means the jumps are off by one
+
 		match opcode {
 			push { t.push(value) }
 			pop  { t.pop() }
@@ -84,23 +87,26 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 			mul  { t.mul() }
 			div  { t.div() }
 			neg  { t.neg() }
+			jump { t.jump(value) }
+			stop { t.stop() }
 			else {
 				eprintln('bad opcode: 0o${i[0]}${i[1]}')
+				return
 			}
 		}
-	}
+		// if t.print_stack { println(t.stack) } // only uncomment while debugging
+	}	
 }
 
+// converts a number from split up octal to an int
 [direct_array_access]
 fn u8_arr_to_int(arr []u8) int {
-	mut numr := arr[7] * pow_0 +
-				arr[6] * pow_1 +
-				arr[5] * pow_2 +
-				arr[4] * pow_3 +
-				arr[3] * pow_4 +
-				arr[2] * pow_5 +
-				arr[1] * pow_6 +
-				arr[0] * pow_7
-	if numr > pos_int_limit || numr < neg_int_limit { int_size_error() }
-	return numr
+	return  arr[7] * pow_0 +
+			arr[6] * pow_1 +
+			arr[5] * pow_2 +
+			arr[4] * pow_3 +
+			arr[3] * pow_4 +
+			arr[2] * pow_5 +
+			arr[1] * pow_6 +
+			arr[0] * pow_7
 }

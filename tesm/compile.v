@@ -1,4 +1,4 @@
-module tvsm
+module tesm
 
 import os
 import regex
@@ -28,6 +28,13 @@ enum Kind {
 	swap
 	add
 	sub
+	put
+	puts
+	mul
+	div
+	neg
+	jump
+	exit
 }
 
 [heap]

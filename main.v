@@ -6,14 +6,17 @@ import os
 
 fn main() {
 	mut vm := vm.Tetrvm{}
-	// vm.push(69)
-	// vm.dup()
-	// vm.add()
-	// println(vm.pop())
-	// vm.push(69)
-	// vm.push(42)
-	// vm.sub()
-	// println(vm.pop())
+	if os.args.len < 2 { usage() }
 
-	vm.run(os.args[1])
+	vm.take_args(os.args[1..])
+}
+
+fn usage() {
+	println('
+tetrvm [flag] <file>
+a virtual machine for tetris
+-------
+flags:
+	-c | compiler for tesm')
+	exit(0)
 }
