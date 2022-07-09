@@ -8,4 +8,15 @@ this is why this exists. i had this idea when i woke up this morning.
 
 tetrvm is a stack-based virtual machine capable of running tetris playfields. yes. playfields.
 
-the maximum int size you can put in is 2^24 because i haven't figured out how to do bigger yet.
+the maximum int size you can put in is 2^24.
+
+the opcodes are in vm/jit.v.
+
+0 = empty
+1 = I piece (light blue)
+2 = square (yellow)
+3 = T (purple)
+4 = J (dark blue)
+5 = L (orange)
+6 = S (green)
+7 = Z (red)
