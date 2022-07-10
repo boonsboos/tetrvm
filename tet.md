@@ -58,7 +58,9 @@ swaps the top two values on the stack
 `a b -- b a`
 
 ### jump
-jumps to the specified instruction (not label yet)
+jumps to the specified label. eg: `jump 0o01` jumps to label 1.
+
+does not modify the stack
 
 ### stop
 stops the current execution
@@ -70,6 +72,8 @@ writes the top of the stack to the console
 
 ### puts
 writes the top of the stack's value in ascii to the console
+
+`a -- -`
 
 ### mul
 multiplies the top two values on the stack
@@ -113,3 +117,8 @@ this pushes either 0 or 1 to the stack
 eq with input, checks if the top value equals the input value
 
 `a -- (i == a)`
+
+### lab
+introduces a label. the value/name should be a number.
+
+does not modify the stack.

@@ -1,0 +1,7 @@
+push 12
+pop
+push 1
+push 1
+add
+put
+stop

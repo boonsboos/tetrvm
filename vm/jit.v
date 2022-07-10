@@ -1,41 +1,8 @@
 module vm
 
+import ops
+
 import os
-
-const (
-	pow_7 = 2097152
-	pow_6 = 262144
-	pow_5 = 32768
-	pow_4 = 4096
-	pow_3 = 512
-	pow_2 = 64
-	pow_1 = 8
-	pow_0 = 1
-)
-
-// the order they're in does not matter
-const opcodes = [u8(push), pop, peek, dup, swap, add, sub, put, puts, mul, div, neg, jump, stop, jnz, eq, eqi]
-
-// values are in octal because it's easier
-const (
-	push = 0o00
-	pop  = 0o01
-	peek = 0o02
-	dup  = 0o03
-	swap = 0o04
-	jump = 0o05
-	jnz  = 0o06
-	stop = 0o07
-	put  = 0o10
-	puts = 0o11
-	mul  = 0o12
-	div  = 0o13
-	neg  = 0o14
-	add  = 0o15
-	sub  = 0o16
-	eq   = 0o17
-	eqi  = 0o20
-)
 
 pub fn (mut t Tetrvm) run(filename string) {
 
@@ -56,64 +23,45 @@ pub fn (mut t Tetrvm) run(filename string) {
 			instructions << file[idx..idx+10]
 		}
 	}
-
-	for idx, i in instructions.reverse() {
-		if i.len != 10 {
-			eprintln('your program is incomplete!')
-			eprintln('errored at ${instructions.len-idx}th set of 10 in $filename')
-			exit(1)
-		}
-	}
-
+	println(instructions)
 	t.run_bytecode(instructions)
 
 }
 
 [inline; direct_array_access]
 fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
-	for !t.stopped || t.inst < instructions.len {
+	for t.inst < instructions.len {
 		i := instructions[t.inst]
 		opcode := (i[0] * 8) + i[1]
-		value := u8_arr_to_int(i[2..10])
+		println('should be correct')
+		value := ops.u8_arr_to_int(i[2..10])
 		
 		t.inst++ // incrementing after jumping means the jumps are off by one
 
 		match opcode {
-			push { t.push(value) }
-			pop  { t.pop() }
-			peek { t.peek() }
-			dup  { t.dup() }
-			swap { t.swap() }
-			add  { t.add() }
-			sub  { t.sub() }
-			put  { t.put() }
-			puts { t.puts() }
-			mul  { t.mul() }
-			div  { t.div() }
-			neg  { t.neg() }
-			jump { t.jump(value) }
-			stop { t.stop() }
-			jnz  { t.jnz(value) }
-			eq   { t.eq() }
-			eqi  { t.eqi(value) }
+			ops.push { t.push(value) }
+			ops.pop  { t.pop() }
+			ops.peek { t.peek() }
+			ops.dup  { t.dup() }
+			ops.swap { t.swap() }
+			ops.add  { t.add() }
+			ops.sub  { t.sub() }
+			ops.put  { t.put() }
+			ops.puts { t.puts() }
+			ops.mul  { t.mul() }
+			ops.div  { t.div() }
+			ops.neg  { t.neg() }
+			ops.jump { t.jump(value) }
+			ops.stop { return }
+			ops.jnz  { t.jnz(value) }
+			ops.eq   { t.eq() }
+			ops.eqi  { t.eqi(value) }
+			ops.lab  { t.lab(value) }
 			else {
-				eprintln('bad opcode: 0o${i[0]}${i[1]}')
+				eprintln('bad opcode: 0o${i[0]}${i[1]} at instruction $t.inst')
 				return
 			}
 		}
 		// if t.print_stack { println(t.stack) } // only uncomment while debugging
 	}	
-}
-
-// converts a number from split up octal to an int
-[direct_array_access]
-fn u8_arr_to_int(arr []u8) int {
-	return  arr[7] * pow_0 +
-			arr[6] * pow_1 +
-			arr[5] * pow_2 +
-			arr[4] * pow_3 +
-			arr[3] * pow_4 +
-			arr[2] * pow_5 +
-			arr[1] * pow_6 +
-			arr[0] * pow_7
 }

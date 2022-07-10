@@ -1,9 +1,11 @@
 module vm
 
+import ops
+
 // pushes a 24bit int to the stack
 [inline; direct_array_access]
 fn (mut t Tetrvm) push(i int) {
-	if i > pos_int_limit || i < neg_int_limit { int_size_error() }
+	if i > ops.pos_int_limit || i < ops.neg_int_limit { int_size_error() }
 	t.stack << i
 	t.stack_size++
 }
@@ -59,6 +61,7 @@ fn (mut t Tetrvm) sub() {
 // a -- -
 [inline]
 fn (mut t Tetrvm) put() {
+	println('put')
 	print(t.pop())
 }
 
@@ -94,16 +97,14 @@ fn (mut t Tetrvm) neg() {
 	t.push(-t.pop())
 }
 
-// jumps to the specified instructions
+// jumps to the specified label
 [inline]
 fn (mut t Tetrvm) jump(inst int) {
-	if inst < 0 { t.bad_inst(inst) }
-	t.inst = inst
-}
-
-[inline]
-fn (mut t Tetrvm) stop() {
-	t.stopped = true
+	if _ := t.labels[inst] {
+		t.inst = t.labels[inst]
+	} else {
+		t.bad_jump(inst)
+	}
 }
 
 // jumps if the value on top of the stack is 1
@@ -123,4 +124,9 @@ fn (mut t Tetrvm) eq() {
 [inline]
 fn (mut t Tetrvm) eqi(value int) {
 	t.push(int(t.pop() == value))
+}
+
+[inline]
+fn (mut t Tetrvm) lab(value int) {
+	t.labels << t.inst
 }
