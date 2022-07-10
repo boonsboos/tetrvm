@@ -161,7 +161,7 @@ put
 stop
 ```
 
-to do labels, use the `lab` instruction, and jump to the label's value:
+to use labels, use the `lab` instruction, and jump to the label's value:
 
 labels start from 0, and increment by 1 for each new label. the identifiers are written to the bytecode, but not used. they are purely for readability.
 ```
@@ -172,4 +172,11 @@ add
 put
 jump 0
 stop
+```
+
+tesm has comments. you can begin comments by typing a semicolon (`;`)
+```
+push 1 ; pushes 1 to the stack
+put    ; pops and prints the top of the stack
+stop   ; stops execution
 ```
