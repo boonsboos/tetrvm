@@ -61,7 +61,6 @@ fn (mut t Tetrvm) sub() {
 // a -- -
 [inline]
 fn (mut t Tetrvm) put() {
-	println('put')
 	print(t.pop())
 }
 
