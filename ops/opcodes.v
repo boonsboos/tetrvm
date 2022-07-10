@@ -27,4 +27,5 @@ pub const (
 	eqi  = 0o20
 	lab  = 0o21
 	get  = 0o22
+	set  = 0o23
 )

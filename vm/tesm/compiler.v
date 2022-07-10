@@ -59,6 +59,8 @@ enum Kind {
 	eq
 	eqi
 	lab
+	get
+	set
 }
 
 // match all different instructions
@@ -171,7 +173,12 @@ fn tokenise(file_content string) []Token {
 			}
 			file.starts_with('get') {
 				tok.idx += 3
-				tok.tokens << Token{.put, tok.row, tok.col, 0}
+				tok.tokens << Token{.get, tok.row, tok.col, 0}
+				tok.col += 3
+			}
+			file.starts_with('set') {
+				tok.idx += 3
+				tok.tokens << Token{.set, tok.row, tok.col, 0}
 				tok.col += 3
 			}
 			else {
@@ -232,6 +239,12 @@ fn verify(tokens []Token) {
 			.get {
 				if tokens[i+1].kind != .value {
 					eprintln('${token.row}:${token.col}| get takes 1 argument but none found')
+					errs++
+				}
+			}
+			.set {
+				if tokens[i+1].kind != .value {
+					eprintln('${token.row}:${token.col}| set takes 1 argument but none found')
 					errs++
 				}
 			}
@@ -344,6 +357,10 @@ fn output(tokens []Token) {
 			.get {
 				buf.write_u8(0o02)
 				buf.write_u8(0o02)
+			}
+			.set {
+				buf.write_u8(0o02)
+				buf.write_u8(0o03)
 			}
 			.value { buf.write(ops.int_to_u8_arr(token.value)) or { continue } }
 			// else {

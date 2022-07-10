@@ -1,4 +1,10 @@
-# tet
+# Docs
+
+- [bytecode](#tet)
+- [assembly](#tesm)
+
+
+## tet
 
 the tetrvm bytecode format
 ***
@@ -27,6 +33,9 @@ if an opcode does not take input but one is given, it is ignored.
 - 0o16: [jnz](#jnz)
 - 0o17: [eq](#eq)
 - 0o20: [eqi](#eqi)
+- 0o21: [lab](#lab)
+- 0o22: [get](#get)
+- 0o23: [set](#set)
 
 all programs compiling to tet have to end with `stop` (0o06), otherwise tetrvm segfaults.
 
@@ -126,4 +135,39 @@ does not modify the stack.
 ### get
 duplicates the `top - n`th element of the stack to the top
 
-`a b c d e -- a b c d e a`
+> warning: this instruction is unsafe. you can very easily crash tetrvm with it
+
+`a b c d e -- e a b c d e`
+
+### set
+set `top - n`th element of the stack to value on top
+
+> warning: this instruction is unsafe. you can very easily crash tetrvm with it
+
+`a b c d e -- b c d a`
+
+## tesm
+
+tesm is a simple assembly dialect. it is so simple in fact, that everything is an instruction, and each instruction is a keyword.
+
+all instructions are listed above.
+
+an example program that prints the result of 1 + 1 to the console, would be
+```
+push 1
+push 1
+add
+put
+stop
+```
+
+to do labels, use the `lab` instruction, and jump to the label's value:
+```
+lab 0
+push 1
+push 1
+add
+put
+jump 0
+stop
+```

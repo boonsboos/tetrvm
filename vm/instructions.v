@@ -131,8 +131,16 @@ fn (mut t Tetrvm) lab(value int) {
 	t.labels << t.inst
 }
 
-// pushes the (stacksize - value)th element of the stack to the top
+// pushes the (top - n)th element of the stack to the top
+// a b c -- c a b c
 [inline; direct_array_access]
 fn (mut t Tetrvm) get(value int) {
 	t.push(t.stack[t.stack_size - value])
+}
+
+// sets the (top - n)th element of the stack to the value on top
+// a b c -- c b
+[inline; direct_array_access]
+fn (mut t Tetrvm) set(value int) {
+	t.stack[t.stack_size - value] = t.pop()
 }
