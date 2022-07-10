@@ -23,7 +23,6 @@ pub fn (mut t Tetrvm) run(filename string) {
 			instructions << file[idx..idx+10]
 		}
 	}
-	println(instructions)
 	t.run_bytecode(instructions)
 
 }
@@ -33,7 +32,6 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 	for t.inst < instructions.len {
 		i := instructions[t.inst]
 		opcode := (i[0] * 8) + i[1]
-		println('should be correct')
 		value := ops.u8_arr_to_int(i[2..10])
 		
 		t.inst++ // incrementing after jumping means the jumps are off by one
