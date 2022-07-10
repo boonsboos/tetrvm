@@ -1,11 +1,11 @@
-lab 0
-push 1
+lab 0 ; creates label 0
+push 1 
 push 2
-add
-eqi 3
-jnz 1
-stop
+add ; 2 + 1 = 3
+eqi 3 ; check if that's true
+jnz 1 ; jump to label 1 if it is
+stop ; stop if it is not
 lab 1
 push 1
-put
+put ; print 1
 stop

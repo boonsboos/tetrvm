@@ -81,6 +81,12 @@ fn tokenise(file_content string) []Token {
 				tok.idx++
 				tok.col++
 			}
+			// comments
+			file.starts_with(';') {
+				com_len := file.all_before('\n').len
+				tok.idx += com_len
+				tok.col += com_len
+			}
 			file.starts_with('lab') {
 				tok.idx += 3
 				tok.tokens << Token{.lab, tok.row, tok.col, 0}
