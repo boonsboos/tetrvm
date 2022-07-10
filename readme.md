@@ -20,3 +20,9 @@ compilation mode requires passing `-c` and a `.tesm` file.
 tetrvm is written in V, so get the V compiler.
 
 build tetrvm by running `v -prod -skip-unused .` in the main source directory.
+
+### roadmap
+
+- add comments to tesm
+- add label-resolving pass to JIT
+- add more instructions

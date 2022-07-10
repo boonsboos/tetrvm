@@ -1,7 +1,11 @@
-push 12
-pop
+lab 0
 push 1
-push 1
+push 2
 add
+eqi 3
+jnz 1
+stop
+lab 1
+push 1
 put
 stop
