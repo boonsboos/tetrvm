@@ -126,7 +126,7 @@ fn (mut t Tetrvm) eqi(value int) {
 }
 
 [inline]
-fn (mut t Tetrvm) lab(value int) {
+fn (mut t Tetrvm) lab() {
 	t.labels << t.inst
 }
 

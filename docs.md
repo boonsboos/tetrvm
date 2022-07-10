@@ -162,6 +162,8 @@ stop
 ```
 
 to do labels, use the `lab` instruction, and jump to the label's value:
+
+labels start from 0, and increment by 1 for each new label.
 ```
 lab 0
 push 1

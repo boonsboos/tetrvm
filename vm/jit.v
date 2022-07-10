@@ -23,6 +23,18 @@ pub fn (mut t Tetrvm) run(filename string) {
 			instructions << file[idx..idx+10]
 		}
 	}
+
+	// resolve labels
+	for i in instructions {
+		opcode := (i[0] * 8) + i[1]
+		t.inst++ // relies on the instruction pointer for resolving the instructions
+		if opcode != ops.lab { continue }
+		t.lab()
+	}
+
+	// reset instruction pointer
+	t.inst = 0
+
 	t.run_bytecode(instructions)
 
 }
@@ -54,7 +66,7 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 			ops.jnz  { t.jnz(value) }
 			ops.eq   { t.eq() }
 			ops.eqi  { t.eqi(value) }
-			ops.lab  { t.lab(value) }
+			ops.lab  { continue } // lab instructions can be ignored, we already took care
 			ops.get  { t.get(value) }
 			ops.set  { t.set(value) }
 			else {

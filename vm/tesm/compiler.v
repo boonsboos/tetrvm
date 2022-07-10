@@ -222,11 +222,11 @@ fn verify(tokens []Token) {
 			}
 			.lab {
 				if tokens[i+1].kind != .value {
-					eprintln('${token.row}:${token.col}| lab takes 1 argument but none found')
+					eprintln('${token.row}:${token.col}| lab does not need an argument, but for readability\'s sake please give one')
 					errs++
 				}
 				if tokens[i+1].value < 0 {
-					eprintln('${token.row}:${token.col}| lab does not support negative labels')
+					eprintln('${token.row}:${token.col}| the first lab is always 0.')
 					errs++
 				}
 			}
