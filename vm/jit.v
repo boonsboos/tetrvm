@@ -57,6 +57,7 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 			ops.eq   { t.eq() }
 			ops.eqi  { t.eqi(value) }
 			ops.lab  { t.lab(value) }
+			ops.get  { t.get(value) }
 			else {
 				eprintln('bad opcode: 0o${i[0]}${i[1]} at instruction $t.inst')
 				return

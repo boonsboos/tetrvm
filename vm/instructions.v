@@ -130,3 +130,9 @@ fn (mut t Tetrvm) eqi(value int) {
 fn (mut t Tetrvm) lab(value int) {
 	t.labels << t.inst
 }
+
+// pushes the (stacksize - value)th element of the stack to the top
+[inline; direct_array_access]
+fn (mut t Tetrvm) get(value int) {
+	t.push(t.stack[t.stack_size - value])
+}

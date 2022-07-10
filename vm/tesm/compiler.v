@@ -61,6 +61,7 @@ enum Kind {
 	lab
 }
 
+// match all different instructions
 fn tokenise(file_content string) []Token {
 	mut tok := Tokeniser{}
 	mut file := file_content
@@ -168,6 +169,11 @@ fn tokenise(file_content string) []Token {
 				tok.tokens << Token{.put, tok.row, tok.col, 0}
 				tok.col += 3
 			}
+			file.starts_with('get') {
+				tok.idx += 3
+				tok.tokens << Token{.put, tok.row, tok.col, 0}
+				tok.col += 3
+			}
 			else {
 				// look for number
 				nr := file.all_before('\n')
@@ -182,6 +188,7 @@ fn tokenise(file_content string) []Token {
 	return tok.tokens
 }
 
+// checks that all instructions that take an operand actually do
 fn verify(tokens []Token) {
 
 	mut errs := 0
@@ -222,6 +229,12 @@ fn verify(tokens []Token) {
 					errs++
 				}
 			}
+			.get {
+				if tokens[i+1].kind != .value {
+					eprintln('${token.row}:${token.col}| get takes 1 argument but none found')
+					errs++
+				}
+			}
 			else {}
 		}
 	}
@@ -230,8 +243,13 @@ fn verify(tokens []Token) {
 		eprintln('${tokens.last().row}:${tokens.last().col}| program has to end with a stop statement')
 		errs++
 	}
+
+	if errs > 0 {
+		exit(1)
+	}
 }
 
+// writes the bytes to the bytecode file
 fn output(tokens []Token) {
 	mut buf := strings.new_builder(10)
 
@@ -322,6 +340,10 @@ fn output(tokens []Token) {
 			.lab {
 				buf.write_u8(0o02)
 				buf.write_u8(0o01)
+			}
+			.get {
+				buf.write_u8(0o02)
+				buf.write_u8(0o02)
 			}
 			.value { buf.write(ops.int_to_u8_arr(token.value)) or { continue } }
 			// else {

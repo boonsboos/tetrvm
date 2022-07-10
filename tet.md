@@ -122,3 +122,8 @@ eq with input, checks if the top value equals the input value
 introduces a label. the value/name should be a number.
 
 does not modify the stack.
+
+### get
+duplicates the `top - n`th element of the stack to the top
+
+`a b c d e -- a b c d e a`
