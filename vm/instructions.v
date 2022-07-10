@@ -23,6 +23,7 @@ fn (mut t Tetrvm) peek() int {
 	return t.stack[t.stack_size]
 }
 
+// duplicates the top value on the stack
 [inline]
 fn (mut t Tetrvm) dup() {
 	t.push(t.peek())
@@ -55,12 +56,14 @@ fn (mut t Tetrvm) sub() {
 }
 
 // prints the value of the top of the stack
+// a -- -
 [inline]
 fn (mut t Tetrvm) put() {
 	print(t.pop())
 }
 
 // prints the top of the stack's value in ASCII
+// a -- -
 [inline]
 fn (mut t Tetrvm) puts() {
 	if t.stack_size == 0 { t.stack_underflow() }
@@ -84,19 +87,40 @@ fn (mut t Tetrvm) div() {
 }
 
 // negates the value on top of the stack
+// a -- (-a)
 [inline]
 fn (mut t Tetrvm) neg() {
 	if t.stack_size == 0 { t.stack_underflow() }
 	t.push(-t.pop())
 }
 
+// jumps to the specified instructions
 [inline]
 fn (mut t Tetrvm) jump(inst int) {
-	if inst < 0 {  }
+	if inst < 0 { t.bad_inst(inst) }
 	t.inst = inst
 }
 
 [inline]
 fn (mut t Tetrvm) stop() {
 	t.stopped = true
+}
+
+// jumps if the value on top of the stack is 1
+// a -- -
+[inline]
+fn (mut t Tetrvm) jnz(inst int) {
+	if t.pop() == 1 { t.jump(inst) }
+}
+
+// checks if the top two values of the stack are equal
+// a b -- c
+[inline]
+fn (mut t Tetrvm) eq() {
+	t.push(int(t.pop() == t.pop()))
+}
+
+[inline]
+fn (mut t Tetrvm) eqi(value int) {
+	t.push(int(t.pop() == value))
 }

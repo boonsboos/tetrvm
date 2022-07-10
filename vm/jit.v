@@ -13,7 +13,8 @@ const (
 	pow_0 = 1
 )
 
-const opcodes = [u8(push), pop, peek, dup, swap, add, sub, put, puts, mul, div, neg, jump, stop]
+// the order they're in does not matter
+const opcodes = [u8(push), pop, peek, dup, swap, add, sub, put, puts, mul, div, neg, jump, stop, jnz, eq, eqi]
 
 // values are in octal because it's easier
 const (
@@ -23,14 +24,17 @@ const (
 	dup  = 0o03
 	swap = 0o04
 	jump = 0o05
-	stop = 0o06
-	put  = 0o07
-	puts = 0o10
-	mul  = 0o11
-	div  = 0o12
-	neg  = 0o13
-	add  = 0o14
-	sub  = 0o15	
+	jnz  = 0o06
+	stop = 0o07
+	put  = 0o10
+	puts = 0o11
+	mul  = 0o12
+	div  = 0o13
+	neg  = 0o14
+	add  = 0o15
+	sub  = 0o16
+	eq   = 0o17
+	eqi  = 0o20
 )
 
 pub fn (mut t Tetrvm) run(filename string) {
@@ -89,6 +93,9 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 			neg  { t.neg() }
 			jump { t.jump(value) }
 			stop { t.stop() }
+			jnz  { t.jnz(value) }
+			eq   { t.eq() }
+			eqi  { t.eqi(value) }
 			else {
 				eprintln('bad opcode: 0o${i[0]}${i[1]}')
 				return
