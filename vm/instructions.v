@@ -13,7 +13,7 @@ fn (mut t Tetrvm) push(i int) {
 // gets and removes the top value of the stack
 [inline; direct_array_access]
 fn (mut t Tetrvm) pop() int {
-	if t.stack_size == 0 { t.stack_underflow() }
+	if t.stack_size == 0 { t.stack_underflow('pop') }
 	t.stack_size--
 	return t.stack.pop()
 }
@@ -21,7 +21,7 @@ fn (mut t Tetrvm) pop() int {
 // returns the top element on the stack
 [inline; direct_array_access]
 fn (mut t Tetrvm) peek() int {
-	if t.stack_size == 0 { t.stack_underflow() }
+	if t.stack_size == 0 { t.stack_underflow('peek') }
 	return t.stack[t.stack_size]
 }
 
@@ -47,7 +47,7 @@ fn (mut t Tetrvm) swap() {
 // a b -- (a + b)
 [inline]
 fn (mut t Tetrvm) add() {
-	if t.stack_size == 1 { t.stack_underflow() }
+	if t.stack_size == 1 { t.stack_underflow('add') }
 	t.push(t.pop() + t.pop())
 }
 
@@ -55,7 +55,7 @@ fn (mut t Tetrvm) add() {
 // a b -- (a - b)
 [inline]
 fn (mut t Tetrvm) sub() {
-	if t.stack_size == 1 { t.stack_underflow() }
+	if t.stack_size == 1 { t.stack_underflow('sub') }
 	t.push(t.pop() - t.pop())
 }
 
@@ -63,6 +63,7 @@ fn (mut t Tetrvm) sub() {
 // a -- -
 [inline]
 fn (mut t Tetrvm) put() {
+	if t.stack_size == 0 { t.stack_underflow('put') }
 	print(t.pop())
 }
 
@@ -70,7 +71,7 @@ fn (mut t Tetrvm) put() {
 // a -- -
 [inline]
 fn (mut t Tetrvm) puts() {
-	if t.stack_size == 0 { t.stack_underflow() }
+	if t.stack_size == 0 { t.stack_underflow('puts') }
 	print(u8(t.pop() % 256).ascii_str())
 }
 
@@ -78,7 +79,7 @@ fn (mut t Tetrvm) puts() {
 // a b -- (a * b)
 [inline]
 fn (mut t Tetrvm) mul() {
-	if t.stack_size == 1 { t.stack_underflow() }
+	if t.stack_size == 1 { t.stack_underflow('mul') }
 	t.push(t.pop() * t.pop())
 }
 
@@ -86,7 +87,7 @@ fn (mut t Tetrvm) mul() {
 // a b -- (a / b)
 [inline]
 fn (mut t Tetrvm) div() {
-	if t.stack_size == 1 { t.stack_underflow() }
+	if t.stack_size == 1 { t.stack_underflow('div') }
 	t.push(t.pop() / t.pop())
 }
 
@@ -94,7 +95,7 @@ fn (mut t Tetrvm) div() {
 // a -- (-a)
 [inline]
 fn (mut t Tetrvm) neg() {
-	if t.stack_size == 0 { t.stack_underflow() }
+	if t.stack_size == 0 { t.stack_underflow('neg') }
 	t.push(-t.pop())
 }
 

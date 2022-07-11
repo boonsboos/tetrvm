@@ -15,8 +15,8 @@ mut:
 }
 
 [inline]
-fn (mut t Tetrvm) stack_underflow() {
-	eprintln('stack underflow at $t.inst')
+fn (mut t Tetrvm) stack_underflow(inst_type string) {
+	eprintln('stack underflow at $t.inst | instruction type: $inst_type')
 	exit(1)
 }
 
