@@ -28,7 +28,9 @@ fn (mut t Tetrvm) peek() int {
 // duplicates the top value on the stack
 [inline]
 fn (mut t Tetrvm) dup() {
-	t.push(t.peek())
+	a := t.pop()
+	t.push(a)
+	t.push(a)
 }
 
 // swaps the top two values on top of the stack
