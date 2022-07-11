@@ -23,17 +23,22 @@ pub fn compile(filename string, outfile string, show_timings bool) {
 	}.replace('\r\n', '\n')
 
 	sw.start()
-	tokens := tokenise(file)
-	durations << sw.elapsed()
+	tokens := tokenise(file) // get all instructions and operands
+	sw.pause()
+	durations[0] = sw.elapsed()
+
 	sw.restart()
-	verify(tokens)
-	durations << sw.elapsed()
+	verify(tokens) // verify that all instructions that should have an operand have one
+	sw.pause()
+	durations[1] = sw.elapsed()
+
 	sw.restart()
-	output(tokens, outfile)
-	durations << sw.elapsed()
+	output(tokens, outfile) // generate the bytecode
+	sw.pause()
+	durations[2] = sw.elapsed()
 
 	if show_timings {
-		println('compiling $filename\n\tTokenisation: ${durations[0].milliseconds()}ms\n\tVerification:${durations[1].milliseconds()}ms\n\tGeneration: ${durations[2].milliseconds()}ms')
+		print_timings(durations)
 	}
 }
 
@@ -402,4 +407,11 @@ fn output(tokens []Token, outfile string) {
 
 fn fill_inst(mut buf strings.Builder) {
 	buf.write([]u8{len:8}) or {}
+}
+
+fn print_timings(durations []time.Duration) {
+	tokenisation := durations[0].microseconds()
+	verification := durations[1].microseconds()
+	generation   := durations[2].microseconds()
+	println('timings:\n\tTokenisation: ${tokenisation}us\n\tVerification: ${verification}us\n\tGeneration:   ${generation}us')
 }
