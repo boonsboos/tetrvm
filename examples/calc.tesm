@@ -1,0 +1,67 @@
+; the calculator works as follows:
+; it accepts 2 one digit numbers (0 to 9) and an operator (+, -, * or /)
+; it then prints the result and exits
+
+read ; number 1
+push 48
+sub ; ascii value - 48 = number
+
+read
+pop ; ignore newline
+
+read ; number 2
+push 48
+sub ; same thing
+
+read 
+pop ; ignore newline again
+
+read ; get operator
+
+dup
+eqi 42 ; *
+jnz 0
+
+dup
+eqi 43 ; +
+jnz 1
+
+dup
+eqi 45 ; -
+jnz 2
+
+dup
+eqi 47 ; /
+jnz 3
+
+stop ; if not any of the above
+
+lab 0 ; mul
+pop ; pop the operator
+mul
+put
+jump 4
+
+lab 1 ; add
+pop ; pop the operator
+add
+neg ; this is for some reason necessary
+put
+jump 4
+
+lab 2 ; sub
+pop ; pop the operator
+sub
+put
+jump 4
+
+lab 3 ; div
+pop ; pop the operator
+div
+put
+jump 4
+
+lab 4 ; print newline
+push 10
+puts
+stop
