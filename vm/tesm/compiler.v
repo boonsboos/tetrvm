@@ -4,8 +4,13 @@ import ops
 
 import os
 import strings
+import time
 
-pub fn compile(filename string) {
+pub fn compile(filename string, outfile string, show_timings bool) {
+
+	mut sw := time.new_stopwatch()
+
+	mut durations := []time.Duration{len: 3}
 
 	if !filename.ends_with('.tesm') {
 		eprintln('tetrvm can only compile .tesm files.')
@@ -17,9 +22,19 @@ pub fn compile(filename string) {
 		exit(1)
 	}.replace('\r\n', '\n')
 
+	sw.start()
 	tokens := tokenise(file)
+	durations << sw.elapsed()
+	sw.restart()
 	verify(tokens)
-	output(tokens)
+	durations << sw.elapsed()
+	sw.restart()
+	output(tokens, outfile)
+	durations << sw.elapsed()
+
+	if show_timings {
+		println('compiling $filename\n\tTokenisation: ${durations[0].milliseconds()}ms\n\tVerification:${durations[1].milliseconds()}ms\n\tGeneration: ${durations[2].milliseconds()}ms')
+	}
 }
 
 [heap]
@@ -269,7 +284,7 @@ fn verify(tokens []Token) {
 }
 
 // writes the bytes to the bytecode file
-fn output(tokens []Token) {
+fn output(tokens []Token, outfile string) {
 	mut buf := strings.new_builder(10)
 
 	for token in tokens {
@@ -377,7 +392,7 @@ fn output(tokens []Token) {
 
 	}	
 
-	os.write_file('out.tet', buf.str()) or {
+	os.write_file(outfile + '.tet', buf.str()) or {
 		eprintln('failed to output your binary')
 		exit(1)
 	}

@@ -33,16 +33,31 @@ fn (mut t Tetrvm) bad_jump(bad int) {
 }
 
 pub fn (mut vm Tetrvm) take_args(args []string) {
-	match args[0] {
-		'-c' {
-			if args.len < 2 {
-				eprintln('you need to supply a .tesm file for compilation')
-				exit(1)
+
+	mut in_file := ''
+	mut out_name := 'out'
+	mut compile := false
+	mut show_timings := false
+
+	for i, arg in args {
+		match arg {
+			'-c' {
+				if name := args[i+1] { in_file = name }
+				compile = true
 			}
-			tesm.compile(args[1])
+			'-o' {
+				if name := args[i+1] { out_name = name }
+			}
+			'-t' { show_timings = true }
+			'-v' { vm.print_stack = true }
+			else { }
 		}
-		'-v' { vm.print_stack = true }
-		else { vm.run(args[0]) }
+	}
+
+	if compile {
+		tesm.compile(in_file, out_name, show_timings)
+	} else {
+		vm.run(args[0])
 	}
 
 }

@@ -17,6 +17,8 @@ tetrvm [flag] <file>
 a virtual machine for tetris
 -------
 flags:
-	-c | compiler for tesm')
+	-c | compiler for tesm
+	-t | show compiler timing statistics
+	-o | set the name of the file the compiler should output')
 	exit(0)
 }
