@@ -87,6 +87,7 @@ enum Kind {
 fn tokenise(file_content string) []Token {
 	mut tok := Tokeniser{}
 	mut file := file_content
+	mut tok_errs := 0
 	for tok.idx < file_content.len {
 
 		file = file_content[tok.idx..]
@@ -210,12 +211,21 @@ fn tokenise(file_content string) []Token {
 			else {
 				// look for number
 				nr := file.all_before('\n')
-				tok.tokens << Token{.value, tok.row, tok.col, nr.strip_margin().int()}
+				if nr.int() == 0 && nr.replace(' ', '') != '0' && !nr.contains(';') {
+					eprintln('$tok.row:$tok.col| unrecognized instruction `${nr}`')
+					tok_errs++
+				}
+
+				tok.tokens << Token{.value, tok.row, tok.col, nr.replace(' ', '').int()}
 				tok.idx += nr.len
 				tok.col += nr.len
 			}
 		}
 
+	}
+
+	if tok_errs > 0 {
+		exit(1)
 	}
 
 	return tok.tokens
