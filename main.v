@@ -19,6 +19,7 @@ a virtual machine for tetris
 flags:
 	-c | compiler for tesm
 	-t | show compiler timing statistics
-	-o | set the name of the file the compiler should output')
+	-o | set the name of the file the compiler should output
+	-p | show the .tet file as playfield')
 	exit(0)
 }

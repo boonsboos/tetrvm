@@ -1,6 +1,7 @@
 module vm
 
 import tesm
+import visualiser
 
 [heap]
 pub struct Tetrvm {
@@ -37,6 +38,7 @@ pub fn (mut vm Tetrvm) take_args(args []string) {
 	mut in_file := ''
 	mut out_name := 'out'
 	mut compile := false
+	mut visualise := false
 	mut show_timings := false
 
 	for i, arg in args {
@@ -50,12 +52,18 @@ pub fn (mut vm Tetrvm) take_args(args []string) {
 			}
 			'-t' { show_timings = true }
 			'-v' { vm.print_stack = true }
+			'-p' {
+				if name := args[i+1] { in_file = name }
+				visualise = true
+			}
 			else { }
 		}
 	}
 
 	if compile {
 		tesm.compile(in_file, out_name, show_timings)
+	} else if visualise {
+		visualiser.visualise(in_file)
 	} else {
 		vm.run(args[0])
 	}
