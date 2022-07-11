@@ -146,3 +146,8 @@ fn (mut t Tetrvm) get(value int) {
 fn (mut t Tetrvm) set(value int) {
 	t.stack[t.stack_size - value] = t.pop()
 }
+
+[inline]
+fn (mut t Tetrvm) read() {
+	t.push(utf8_getchar())
+}

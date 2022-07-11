@@ -69,6 +69,7 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 			ops.lab  { continue } // lab instructions can be ignored, we already took care
 			ops.get  { t.get(value) }
 			ops.set  { t.set(value) }
+			ops.read { t.read() }
 			else {
 				eprintln('bad opcode: 0o${i[0]}${i[1]} at instruction $t.inst')
 				return

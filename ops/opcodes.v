@@ -4,7 +4,7 @@ pub const pos_int_limit = 16777216
 pub const neg_int_limit = -16777216
 
 // the order they're in does not matter
-pub const opcodes = [u8(push), pop, peek, dup, swap, add, sub, put, puts, mul, div, neg, jump, stop, jnz, eq, eqi, lab, get, set]
+pub const opcodes = [u8(push), pop, peek, dup, swap, add, sub, put, puts, mul, div, neg, jump, stop, jnz, eq, eqi, lab, get, set, read]
 
 // values are in octal because it's easier
 pub const (
@@ -28,4 +28,5 @@ pub const (
 	lab  = 0o21
 	get  = 0o22
 	set  = 0o23
+	read = 0o24
 )

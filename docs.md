@@ -36,6 +36,7 @@ if an opcode does not take input but one is given, it is ignored.
 - 0o21: [lab](#lab)
 - 0o22: [get](#get)
 - 0o23: [set](#set)
+- 0o24: [read](#read)
 
 all programs compiling to tet have to end with `stop` (0o06), otherwise tetrvm segfaults.
 
@@ -145,6 +146,11 @@ set `top - n`th element of the stack to value on top
 > warning: this instruction is unsafe. you can very easily crash tetrvm with it
 
 `a b c d e -- b c d a`
+
+### read
+reads a character from stdin and pushes its ascii value to the stack
+
+`- -- a`
 
 ## tesm
 

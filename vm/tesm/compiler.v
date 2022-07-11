@@ -81,6 +81,7 @@ enum Kind {
 	lab
 	get
 	set
+	read
 }
 
 // match all different instructions
@@ -207,6 +208,11 @@ fn tokenise(file_content string) []Token {
 				tok.idx += 3
 				tok.tokens << Token{.set, tok.row, tok.col, 0}
 				tok.col += 3
+			}
+			file.starts_with('read') {
+				tok.idx += 4
+				tok.tokens << Token{.read, tok.row, tok.col, 0}
+				tok.col += 4
 			}
 			else {
 				// look for number
@@ -397,6 +403,11 @@ fn output(tokens []Token, outfile string) {
 			.set {
 				buf.write_u8(0o02)
 				buf.write_u8(0o03)
+			}
+			.read {
+				buf.write_u8(0o02)
+				buf.write_u8(0o04)
+				fill_inst(mut buf)
 			}
 			.value { buf.write(ops.int_to_u8_arr(token.value)) or { continue } }
 			// else {
