@@ -21,7 +21,7 @@ pub fn visualise(filename string) {
 
 		match b {
 			0o00 { buf.write_string('  ') }
-			0o01 { buf.write_string(term.bright_bg_blue('  ')) }
+			0o01 { buf.write_string(term.bright_bg_cyan('  ')) }
 			0o02 { buf.write_string(term.bg_yellow('  ')) }
 			0o03 { buf.write_string(term.bg_magenta('  ')) }
 			0o04 { buf.write_string(term.bg_blue('  ')) }
