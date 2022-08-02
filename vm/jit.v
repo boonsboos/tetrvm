@@ -24,11 +24,14 @@ pub fn (mut t Tetrvm) run(filename string) {
 		}
 	}
 
-	// resolve labels
+	// pre-run through the program to resolve labels
+	// if they're not resolved before runtime, you can't jump to labels defined after a jump
 	for i in instructions {
-		opcode := (i[0] * 8) + i[1]
-		t.inst++ // relies on the instruction pointer for resolving the instructions
-		if opcode != ops.lab { continue }
+		t.inst++ // so we use the instruction pointer
+		// what it does, is add its current value to the array of label locations
+		// the interpreter then changes the instruction pointer to jump
+
+		if (i[0] * 8) + i[1] != ops.lab { continue } // gets the opcode
 		t.lab()
 	}
 
@@ -70,6 +73,7 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 			ops.get  { t.get(value) }
 			ops.set  { t.set(value) }
 			ops.read { t.read() }
+			ops.jgz  { t.jgz(value) }
 			else {
 				eprintln('bad opcode: 0o${i[0]}${i[1]} at instruction $t.inst')
 				return

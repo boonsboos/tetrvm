@@ -151,3 +151,9 @@ fn (mut t Tetrvm) set(value int) {
 fn (mut t Tetrvm) read() {
 	t.push(utf8_getchar())
 }
+
+// jump if greater than 0
+[inline]
+fn (mut t Tetrvm) jgz(inst int) {
+	if t.pop() > 0 { t.jump(inst) }
+}

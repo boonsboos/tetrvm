@@ -33,12 +33,16 @@ pub fn compile(filename string, outfile string, show_timings bool) {
 	durations[1] = sw.elapsed()
 
 	sw.restart()
-	output(tokens, outfile) // generate the bytecode
+	mut filebuf := output(tokens, outfile) // generate the bytecode
 	sw.pause()
 	durations[2] = sw.elapsed()
 
 	if show_timings {
 		print_timings(durations)
+	}
+
+	os.write_file(outfile + '.tet', filebuf.str()) or {
+		eprintln('failed to output bytecode')
 	}
 }
 
@@ -82,12 +86,13 @@ enum Kind {
 	get
 	set
 	read
+	jgz
 }
 
 // match all different instructions
 fn tokenise(file_content string) []Token {
 	mut tok := Tokeniser{}
-	mut file := file_content
+	mut file := ''
 	mut tok_errs := 0
 	for tok.idx < file_content.len {
 
@@ -214,6 +219,11 @@ fn tokenise(file_content string) []Token {
 				tok.tokens << Token{.read, tok.row, tok.col, 0}
 				tok.col += 4
 			}
+			file.starts_with('jgz') {
+				tok.idx += 3
+				tok.tokens << Token{.jgz, tok.row, tok.col, 0}
+				tok.col += 3
+			}
 			else {
 				// look for number
 				nr := file.all_before('\n')
@@ -290,11 +300,17 @@ fn verify(tokens []Token) {
 					errs++
 				}
 			}
+			.jgz {
+				if tokens[i+1].kind != .value {
+					eprintln('${token.row}:${token.col}| jgz takes 1 argument but none found')
+					errs++
+				}
+			}
 			else {}
 		}
 	}
 
-	if tokens.last().kind != .stop {
+	if tokens[tokens.len-1].kind != .stop {
 		eprintln('${tokens.last().row}:${tokens.last().col}| program has to end with a stop statement')
 		errs++
 	}
@@ -305,7 +321,7 @@ fn verify(tokens []Token) {
 }
 
 // writes the bytes to the bytecode file
-fn output(tokens []Token, outfile string) {
+fn output(tokens []Token, outfile string) strings.Builder {
 	mut buf := strings.new_builder(10)
 
 	for token in tokens {
@@ -409,6 +425,10 @@ fn output(tokens []Token, outfile string) {
 				buf.write_u8(0o04)
 				fill_inst(mut buf)
 			}
+			.jgz {
+				buf.write_u8(0o02)
+				buf.write_u8(0o05)
+			}
 			.value { buf.write(ops.int_to_u8_arr(token.value)) or { continue } }
 			// else {
 			// 	eprintln('unsupported operation: `$token.kind`. please report this on github')
@@ -418,12 +438,7 @@ fn output(tokens []Token, outfile string) {
 
 	}	
 
-	os.write_file(outfile + '.tet', buf.str()) or {
-		eprintln('failed to output your binary')
-		exit(1)
-	}
-
-	buf.clear()
+	return buf
 }
 
 fn fill_inst(mut buf strings.Builder) {
