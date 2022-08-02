@@ -1,25 +1,18 @@
-push 10
-push 100
-push 108
-push 114
-push 111
-push 119
-push 32
-get 3
-get 6
+push 0
+push 10  ; \n
+push 100 ; d
+push 108 ; l
+push 114 ; r
+push 111 ; o
+push 119 ; w
+push 32  ; <space>
+get 3    ; o
+get 6    ; l
+dup      ; l
+push 101 ; e
+push 104 ; h
+lab 0
+puts
 dup
-push 101
-push 104
-puts
-puts
-puts
-puts
-puts
-puts
-puts
-puts
-puts
-puts
-puts
-puts
+jgz 0 ; while top > 0, puts
 stop
