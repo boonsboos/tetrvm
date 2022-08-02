@@ -112,7 +112,7 @@ subtracts the top two values on the stack
 `a b -- (b - a)`
 
 ### jnz
-jumps if the top of the stack is not 0; if it is 1
+jumps if the top of the stack is not 0. it jumps if the top is equal to 1
 
 `a -- -`
 
@@ -151,6 +151,11 @@ set `top - n`th element of the stack to value on top
 reads a character from stdin and pushes its ascii value to the stack
 
 `- -- a`
+
+### jgz
+jumps if the value on the stack is greater than 0.
+
+`a -- -`
 
 ## tesm
 
