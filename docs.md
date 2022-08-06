@@ -37,10 +37,9 @@ if an opcode does not take input but one is given, it is ignored.
 - 0o22: [get](#get)
 - 0o23: [set](#set)
 - 0o24: [read](#read)
+- 0o25: [jgz](#jgz)
 
-all programs compiling to tet have to end with `stop` (0o06), otherwise tetrvm segfaults.
-
-that is not a bug, just imperfect design.
+all programs compiling to tet have to end with `stop` (0o06).
 ***
 ### push
 pushes to the top of the stack
@@ -112,7 +111,7 @@ subtracts the top two values on the stack
 `a b -- (b - a)`
 
 ### jnz
-jumps if the top of the stack is not 0. it jumps if the top is equal to 1
+jumps if the top of the stack is 1.
 
 `a -- -`
 
