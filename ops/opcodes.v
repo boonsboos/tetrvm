@@ -14,7 +14,7 @@ pub const (
 	dup  = 0o03
 	swap = 0o04
 	jump = 0o05
-	jnz  = 0o06
+	jit  = 0o06
 	stop = 0o07
 	put  = 0o10
 	puts = 0o11

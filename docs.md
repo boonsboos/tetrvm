@@ -110,8 +110,8 @@ subtracts the top two values on the stack
 
 `a b -- (b - a)`
 
-### jnz
-jumps if the top of the stack is 1.
+### jit
+jumps if the top of the stack is true (value 1).
 
 `a -- -`
 
@@ -152,7 +152,7 @@ reads a character from stdin and pushes its ascii value to the stack
 `- -- a`
 
 ### jgz
-jumps if the value on the stack is greater than 0.
+jumps if the top value on the stack is greater than 0.
 
 `a -- -`
 

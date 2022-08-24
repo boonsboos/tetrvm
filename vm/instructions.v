@@ -112,7 +112,7 @@ fn (mut t Tetrvm) jump(inst int) {
 // jumps if the value on top of the stack is 1
 // a -- -
 [inline]
-fn (mut t Tetrvm) jnz(inst int) {
+fn (mut t Tetrvm) jit(inst int) {
 	if t.pop() == 1 { t.jump(inst) }
 }
 

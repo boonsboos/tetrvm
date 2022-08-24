@@ -66,7 +66,7 @@ fn (mut t Tetrvm) run_bytecode(instructions [][]u8) {
 			ops.neg  { t.neg() }
 			ops.jump { t.jump(value) }
 			ops.stop { return }
-			ops.jnz  { t.jnz(value) }
+			ops.jit  { t.jit(value) }
 			ops.eq   { t.eq() }
 			ops.eqi  { t.eqi(value) }
 			ops.lab  { continue } // lab instructions can be ignored, we already took care

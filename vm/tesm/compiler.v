@@ -79,7 +79,7 @@ enum Kind {
 	neg
 	jump
 	stop
-	jnz
+	jit
 	eq
 	eqi
 	lab
@@ -164,9 +164,9 @@ fn tokenise(file_content string) []Token {
 				tok.tokens << Token{.neg, tok.row, tok.col, 0}
 				tok.col += 3
 			}
-			file.starts_with('jnz') {
+			file.starts_with('jit') {
 				tok.idx += 3
-				tok.tokens << Token{.jnz, tok.row, tok.col, 0}
+				tok.tokens << Token{.jit, tok.row, tok.col, 0}
 				tok.col += 3
 			}
 			file.starts_with('eqi') {
@@ -266,9 +266,9 @@ fn verify(tokens []Token) {
 					errs++
 				}
 			}
-			.jnz {
+			.jit {
 				if tokens[i+1].kind != .value {
-					eprintln('${token.row}:${token.col}| jnz takes 1 argument but none found')
+					eprintln('${token.row}:${token.col}| jit takes 1 argument but none found')
 					errs++
 				}
 			}
@@ -355,7 +355,7 @@ fn output(tokens []Token, outfile string) strings.Builder {
 				buf.write_u8(0o00)
 				buf.write_u8(0o05)
 			}
-			.jnz {
+			.jit {
 				buf.write_u8(0o00)
 				buf.write_u8(0o06)
 			}
